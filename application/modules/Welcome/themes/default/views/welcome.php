@@ -14,7 +14,9 @@
 			<code>application/controllers/Welcome.php</code>
 
 			<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="https://www.codeigniter.com/user_guide/" target="_blank">User Guide</a>.</p>
-		</div><!--/.panel-body-->
+			<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
+
+                </div><!--/.panel-body-->
 	
 	</div><!--/.panel-->
 </div><!--/.col-sm-8-->
