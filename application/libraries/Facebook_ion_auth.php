@@ -9,7 +9,6 @@ class Facebook_ion_auth {
         // get Codeigniter instance
         $this->CI = & get_instance();
         // Load config
-        // This is a comment
         $this->CI->load->config('facebook_ion_auth', TRUE);
         $this->app_id = $this->CI->config->item('app_id', 'facebook_ion_auth');
         $this->app_secret = $this->CI->config->item('app_secret', 'facebook_ion_auth');
