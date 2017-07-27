@@ -1,7 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-//require_once APPPATH . 'third_party/' . 'Smarty/Smarty.class.php';
+
+require_once APPPATH . 'third_party/' . 'Smarty/Smarty.class.php';
 
 /*
  * Theme Library
@@ -10,6 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author 	Kader Bouyakoub <bkade@mail.com>
  * @link 	http://www.bkader.com/
  */
+
 class Theme {
 
     /**
@@ -80,6 +82,15 @@ class Theme {
     public function __construct(array $config = array()) {
         // Prepare instance of CI object
         $this->CI = & get_instance();
+        if (!property_exists($this->CI, 'smarty')) {
+            $this->CI->smarty = new Smarty();
+
+
+            // $this->smarty->setTemplateDir(APPPATH . 'views/');
+            $this->CI->smarty->setCompileDir(APPPATH . 'views/templates_c/');
+            $this->CI->smarty->setCacheDir(APPPATH . 'views/cache/');
+            $this->CI->smarty->setConfigDir(APPPATH . 'third_party/' . 'Smarty/');
+        }
 
         $this->initialize($config);
 
@@ -97,8 +108,8 @@ class Theme {
         // Set some useful variables
         $this->set('site_title', $this->site_title, TRUE);
         $this->set('uri_string', $this->CI->uri->uri_string(), TRUE);
-       // $this->smarty = new Smarty();
-       // var_dump($this->smarty);die();
+        // $this->smarty = new Smarty();
+        // var_dump($this->smarty);die();
     }
 
     // ------------------------------------------------------------------------
@@ -177,7 +188,7 @@ class Theme {
      * @param 	boolean 	$global 	make property global or not
      * @return 	instance of class
      */
-    public function set($var, $val = NULL, $global = FALSE) {
+    public function set($var, $val = NULL, $global = TRUE) {
         if (is_array($var)) {
             foreach ($var as $key => $value) {
                 $this->set($key, $value, $global);
@@ -186,8 +197,10 @@ class Theme {
             return $this;
         }
 
+
         if ($global === TRUE) {
             $this->CI->load->vars($var, $val);
+            $this->CI->smarty->assign($var, $val);
         } else {
             $this->data[$var] = $val;
         }
@@ -858,6 +871,7 @@ class Theme {
             'js_files' => $this->_output_js(),
         ));
 
+
         // Set page layout and put content in it
         $layout = array();
 
@@ -904,7 +918,7 @@ class Theme {
      * @return 	mixed
      */
     protected function _load_file($type = 'view', $view = '', $data = array(), $return = FALSE) {
-       // var_dump($this->smarty);die();
+        // var_dump($this->smarty);die();
 
         switch ($type) {
 
@@ -917,7 +931,9 @@ class Theme {
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'views'),
                     // mod +
                     build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views'),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
                     build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views'),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
                     // mod -
                     build_path(APPPATH, 'modules', $this->module, 'views'),
                     build_path(APPPATH, 'views'),
@@ -926,14 +942,23 @@ class Theme {
 
                 if ($this->CI->agent->is_mobile()) {
                     $paths = array(
-                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'mobile', 'views'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile', 'views'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'mobile'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'views'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'views'),
                         // mod +
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'views'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'views'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
                         // mod -
+                        build_path(APPPATH, 'modules', $this->module, 'mobile', 'views'),
+                        build_path(APPPATH, 'modules', $this->module, 'mobile'),
+                        build_path(APPPATH, 'views', 'mobile'),
                         build_path(APPPATH, 'modules', $this->module, 'views'),
                         build_path(APPPATH, 'views'),
                         build_path(VIEWPATH),
@@ -956,7 +981,12 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.php')) {
+                        if (file_exists($path . $view . '.tpl')) {
+                            $found = TRUE;
+                            $this->CI->smarty->assign($data);
+                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
+                            break;
+                        } elseif (file_exists($path . $view . '.php')) {
                             $found = TRUE;
                             $this->CI->load->vars($data);
                             $output = $this->CI->load->file($path . $view . '.php', $return);
@@ -981,24 +1011,28 @@ class Theme {
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'partials'),
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'partials'),
                     // mod +
-                    build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views', 'partials'),
-                    build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views', 'partials'),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'partials'),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'partials'),
                     // mod -
-                    build_path(APPPATH, 'modules', $this->module, 'views', 'partials'),
+                    build_path(APPPATH, 'modules', $this->module, 'partials'),
                     build_path(APPPATH, 'views', 'partials'),
                     build_path(VIEWPATH, 'partials'),
                 );
 
                 if ($this->CI->agent->is_mobile()) {
                     $paths = array(
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'mobile', 'partials'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile', 'partials'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'partials'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'partials'),
                         // mod +
-                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'views', 'partials'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'views', 'partials'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views', 'partials'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views', 'partials'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'partials'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'partials'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'partials'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'partials'),
                         // mod -
+                        build_path(APPPATH, 'modules', $this->module, 'mobile', 'partials'),
+                        build_path(APPPATH, 'views', 'mobile', 'partials'),
                         build_path(APPPATH, 'modules', $this->module, 'views', 'partials'),
                         build_path(APPPATH, 'views', 'partials'),
                         build_path(VIEWPATH, 'partials'),
@@ -1021,7 +1055,12 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.php')) {
+                        if (file_exists($path . $view . '.tpl')) {
+                            $found = TRUE;
+                            $this->CI->smarty->assign($data);
+                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
+                            break;
+                        } elseif (file_exists($path . $view . '.php')) {
                             $found = TRUE;
                             $this->CI->load->vars($data);
                             $output = $this->CI->load->file($path . $view . '.php', $return);
@@ -1047,8 +1086,8 @@ class Theme {
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'layouts'),
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'layouts'),
                     // mod +
-                    build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views', 'layouts'),
-                    build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views', 'layouts'),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'layouts'),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'layouts'),
                     // mod -
                     build_path(APPPATH, 'modules', $this->module, 'views', 'layouts'),
                     build_path(APPPATH, 'views', 'layouts'),
@@ -1057,14 +1096,18 @@ class Theme {
 
                 if ($this->CI->agent->is_mobile()) {
                     $paths = array(
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'mobile', 'layouts'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile', 'layouts'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'layouts'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'layouts'),
                         // mod +
-                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'views', 'layouts'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'views', 'layouts'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views', 'layouts'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views', 'layouts'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'layouts'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'layouts'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'layouts'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'layouts'),
                         // mod -
+                        build_path(APPPATH, 'modules', $this->module, 'mobile', 'views', 'layouts'),
+                        build_path(APPPATH, 'views', 'mobile', 'layouts'),
                         build_path(APPPATH, 'modules', $this->module, 'views', 'layouts'),
                         build_path(APPPATH, 'views', 'layouts'),
                         build_path(VIEWPATH, 'layouts'),
@@ -1086,7 +1129,12 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.php')) {
+                        if (file_exists($path . $view . '.tpl')) {
+                            $found = TRUE;
+                            $this->CI->smarty->assign($data);
+                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
+                            break;
+                        } elseif (file_exists($path . $view . '.php')) {
                             $found = TRUE;
                             $this->CI->load->vars($data);
                             $output = $this->CI->load->file($path . $view . '.php', $return);
@@ -1115,8 +1163,8 @@ class Theme {
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module),
                     build_path(FCPATH, 'content', 'themes', $this->theme),
                     // mod +
-                    build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views', 'layouts'),
-                    build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views', 'layouts'),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
+                    build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
                     // mod -
                     build_path(APPPATH, 'modules', $this->module, 'views'),
                     build_path(APPPATH, 'views'),
@@ -1125,19 +1173,25 @@ class Theme {
 
                 if ($this->CI->agent->is_mobile()) {
                     $paths = array(
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'mobile'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module),
                         build_path(FCPATH, 'content', 'themes', $this->theme),
                         // mod +
-                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'views', 'layouts'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'views', 'layouts'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views', 'layouts'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views', 'layouts'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
                         // mod -
+                        build_path(APPPATH, 'modules', $this->module, 'mobile', 'views'),
+                        build_path(APPPATH, 'modules', $this->module, 'views'),
                         build_path(APPPATH, 'modules', $this->module, 'views'),
                         build_path(APPPATH, 'views'),
                         build_path(VIEWPATH),
                     );
                 }
+
+
 
                 // remove uneccessary paths if $this->module is NULL
                 if (empty($this->module)) {
@@ -1154,7 +1208,12 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.php')) {
+                        if (file_exists($path . $view . '.tpl')) {
+                            $found = TRUE;
+                            $this->CI->smarty->assign($data);
+                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
+                            break;
+                        } elseif (file_exists($path . $view . '.php')) {
                             $found = TRUE;
                             $this->CI->load->vars($data);
                             $output = $this->CI->load->file($path . $view . '.php', $return);
