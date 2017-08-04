@@ -1,6 +1,6 @@
 <nav class="ui fixed inverted menu">
 	<div class="ui container">
-		<a class="header item" href="{site_url()}">{$title}</a>
+		<a class="header item" href="{site_url()}">{$site_title}</a>
 		<a class="item" href="{site_url()}">Bootstrap Theme</a></li>
 		<a class="item" href="https://goo.gl/fZ5P94" target="_blank">GitHub</a>
 		<a class="item" href="http://www.codeigniter.com/" target="_blank">CodeIgniter</a>
