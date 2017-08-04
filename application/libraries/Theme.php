@@ -82,6 +82,8 @@ class Theme {
     public function __construct(array $config = array()) {
         // Prepare instance of CI object
         $this->CI = & get_instance();
+        $this->CI->config->load('theme');
+        
         if (!property_exists($this->CI, 'smarty')) {
             $this->CI->smarty = new Smarty();
 
@@ -121,6 +123,7 @@ class Theme {
     public function initialize(array $config = array()) {
         // You can override the config set in theme.php by adding to
         // your custom config file: $config['theme'] = 'your_theme';
+
         if ($this->CI->config->item('theme')) {
             $config['theme.theme'] = $this->CI->config->item('theme');
         }
@@ -386,7 +389,7 @@ class Theme {
             $assets_url = $this->CI->config->base_url("content/{$folder}/{$uri}");
         }
 
-        return $assets_url;
+        return $assets_url . '?ver=' . $this->CI->config->item('theme.assets_ver');
     }
 
     /**

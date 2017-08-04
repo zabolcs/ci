@@ -62,6 +62,7 @@ $config['theme.cdn_server'] = ''; // i.e: 'http://static.myhost.com/';
 $config['theme.site_title']       = 'CI-Theme';
 $config['theme.site_description'] = 'CodeIgniter Themes Library';
 $config['theme.site_keywords']    = 'codeigniter, themes, libraries, bkader';
+$config['theme.assets_ver'] = '20170805';
 
 /* End of file theme.php */
 /* Location: ./application/config/theme.php */
