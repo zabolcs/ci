@@ -918,7 +918,7 @@ class Theme {
     // !PROTECTED METHODS
     // ------------------------------------------------------------------------
 
-    protected function generate_output($path, $view, $data) {
+    protected function generate_output($path, $view, $data, $return = FALSE) {
         if (file_exists($path . $view . '.tpl')) {
             $this->add_template_dir($path);
             $this->CI->smarty->assign($data);
@@ -1003,7 +1003,7 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        $output = $this->generate_output($path, $view, $data);
+                        $output = $this->generate_output($path, $view, $data, $return);
                         if (!empty($output)) {
                             $found = TRUE;
                             break;
@@ -1071,7 +1071,7 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        $output = $this->generate_output($path, $view, $data);
+                        $output = $this->generate_output($path, $view, $data, $return);
                         if (!empty($output)) {
                             $found = TRUE;
                             break;
@@ -1139,7 +1139,7 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        $output = $this->generate_output($path, $view, $data);
+                        $output = $this->generate_output($path, $view, $data, $return);
                         if (!empty($output)) {
                             $found = TRUE;
                             break;
@@ -1212,7 +1212,7 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        $output = $this->generate_output($path, $view, $data);
+                        $output = $this->generate_output($path, $view, $data, $return);
                         if (!empty($output)) {
                             $found = TRUE;
                             break;
