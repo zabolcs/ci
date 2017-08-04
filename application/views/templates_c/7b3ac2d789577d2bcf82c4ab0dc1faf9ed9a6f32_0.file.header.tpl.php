@@ -1,15 +1,15 @@
 <?php
-/* Smarty version 3.1.30, created on 2017-07-27 22:33:19
+/* Smarty version 3.1.30, created on 2017-08-04 19:09:16
   from "C:\xampp\htdocs\ci\content\themes\smarty\partials\header.tpl" */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.30',
-  'unifunc' => 'content_597a4e0f4c48b6_12781115',
+  'unifunc' => 'content_5984aa3c9d0940_77721021',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '16921cbd8e87579ee54466e02bc67ef45fb3bd87' => 
+    '7b3ac2d789577d2bcf82c4ab0dc1faf9ed9a6f32' => 
     array (
       0 => 'C:\\xampp\\htdocs\\ci\\content\\themes\\smarty\\partials\\header.tpl',
       1 => 1501187597,
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_597a4e0f4c48b6_12781115 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5984aa3c9d0940_77721021 (Smarty_Internal_Template $_smarty_tpl) {
 ?>
 <nav class="ui fixed inverted menu">
 	<div class="ui container">

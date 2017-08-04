@@ -86,7 +86,7 @@ class Theme {
             $this->CI->smarty = new Smarty();
 
 
-            // $this->smarty->setTemplateDir(APPPATH . 'views/');
+            //$this->smarty->setTemplateDir(APPPATH . 'views/');
             $this->CI->smarty->setCompileDir(APPPATH . 'views/templates_c/');
             $this->CI->smarty->setCacheDir(APPPATH . 'views/cache/');
             $this->CI->smarty->setConfigDir(APPPATH . 'third_party/' . 'Smarty/');
@@ -108,8 +108,6 @@ class Theme {
         // Set some useful variables
         $this->set('site_title', $this->site_title, TRUE);
         $this->set('uri_string', $this->CI->uri->uri_string(), TRUE);
-        // $this->smarty = new Smarty();
-        // var_dump($this->smarty);die();
     }
 
     // ------------------------------------------------------------------------
@@ -702,7 +700,19 @@ class Theme {
      */
     public function theme($theme = 'default') {
         $this->theme = $theme;
+        // add directory where templates are stored
+        $this->CI->smarty->addTemplateDir(FCPATH . "content/themes/{$this->theme}/");
         return $this;
+    }
+
+    /**
+     * Changes master view file.
+     * @access 	public
+     * @param 	string 	$master
+     * @return 	object
+     */
+    public function add_template_dir($dir) {
+        $this->CI->smarty->addTemplateDir($dir);
     }
 
     /**
@@ -908,6 +918,18 @@ class Theme {
     // !PROTECTED METHODS
     // ------------------------------------------------------------------------
 
+    protected function generate_output($path, $view, $data) {
+        if (file_exists($path . $view . '.tpl')) {
+            $this->add_template_dir($path);
+            $this->CI->smarty->assign($data);
+            return $this->CI->smarty->fetch($view . '.tpl');
+        } elseif (file_exists($path . $view . '.php')) {
+            $this->CI->load->vars($data);
+            return $this->CI->load->file($path . $view . '.php', $return);
+        }
+        return null;
+    }
+
     /**
      * Load view files with locations depending on files types
      * @access 	protected
@@ -981,15 +1003,9 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.tpl')) {
+                        $output = $this->generate_output($path, $view, $data);
+                        if (!empty($output)) {
                             $found = TRUE;
-                            $this->CI->smarty->assign($data);
-                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
-                            break;
-                        } elseif (file_exists($path . $view . '.php')) {
-                            $found = TRUE;
-                            $this->CI->load->vars($data);
-                            $output = $this->CI->load->file($path . $view . '.php', $return);
                             break;
                         }
                     }
@@ -1055,15 +1071,9 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.tpl')) {
+                        $output = $this->generate_output($path, $view, $data);
+                        if (!empty($output)) {
                             $found = TRUE;
-                            $this->CI->smarty->assign($data);
-                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
-                            break;
-                        } elseif (file_exists($path . $view . '.php')) {
-                            $found = TRUE;
-                            $this->CI->load->vars($data);
-                            $output = $this->CI->load->file($path . $view . '.php', $return);
                             break;
                         }
                     }
@@ -1129,15 +1139,9 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.tpl')) {
+                        $output = $this->generate_output($path, $view, $data);
+                        if (!empty($output)) {
                             $found = TRUE;
-                            $this->CI->smarty->assign($data);
-                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
-                            break;
-                        } elseif (file_exists($path . $view . '.php')) {
-                            $found = TRUE;
-                            $this->CI->load->vars($data);
-                            $output = $this->CI->load->file($path . $view . '.php', $return);
                             break;
                         }
                     }
@@ -1208,15 +1212,9 @@ class Theme {
                     $output = '';
 
                     foreach (array_unique($paths) as $path) {
-                        if (file_exists($path . $view . '.tpl')) {
+                        $output = $this->generate_output($path, $view, $data);
+                        if (!empty($output)) {
                             $found = TRUE;
-                            $this->CI->smarty->assign($data);
-                            $output = $this->CI->smarty->fetch($path . $view . '.tpl');
-                            break;
-                        } elseif (file_exists($path . $view . '.php')) {
-                            $found = TRUE;
-                            $this->CI->load->vars($data);
-                            $output = $this->CI->load->file($path . $view . '.php', $return);
                             break;
                         }
                     }
@@ -1238,7 +1236,8 @@ class Theme {
      * @param 	string 	$output 	the html output to compress
      * @return 	string 	the minified version of $output
      */
-    protected function _compress_output($output) {
+    protected
+            function _compress_output($output) {
         // Make sure $output is always a string
         is_string($output) OR $output = (string) $output;
 
@@ -1267,4 +1266,4 @@ class Theme {
 }
 
 /* End of file Theme.php */
-/* Location: ./application/libraries/Theme.php */
+                    /* Location: ./application/libraries/Theme.php */                

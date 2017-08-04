@@ -1,5 +1,5 @@
-<div style='width: 100%'>
-    {'This is a dummy alert just to show you how to display an alert using <strong>print_alert()</strong> function.'|print_alert}
+<div class="sixteen wide tablet ten wide computer column">
+    {'This is a dummy alert just to show you how to display an alert using <strong>print_alert()</strong> function. TEST MODULE PARTIAL'|print_alert}
     <div class="ui segment">
 
         <h1 class="ui header" style="margin-top: 0;">Welcome to CodeIgniter! TESZT</h1>
