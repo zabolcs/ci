@@ -1215,6 +1215,7 @@ class Theme {
                     return $output;
                 }
 
+                
                 break;
         }
     }
