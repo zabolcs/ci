@@ -83,7 +83,7 @@ class Theme {
         // Prepare instance of CI object
         $this->CI = & get_instance();
         $this->CI->config->load('theme');
-        
+
         if (!property_exists($this->CI, 'smarty')) {
             $this->CI->smarty = new Smarty();
 
@@ -954,13 +954,11 @@ class Theme {
                 $paths = array(
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module),
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'views'),
-                    // mod +
                     build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'views'),
                     build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
+                    build_path(APPPATH, 'modules', $this->module, 'views'),
                     build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views'),
                     build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
-                    // mod -
-                    build_path(APPPATH, 'modules', $this->module, 'views'),
                     build_path(APPPATH, 'views'),
                     build_path(VIEWPATH),
                 );
@@ -971,20 +969,18 @@ class Theme {
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile', 'views'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'mobile'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile'),
-                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'views'),
-                        build_path(FCPATH, 'content', 'themes', $this->theme, 'views'),
-                        // mod +
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'views'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'views'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile'),
-                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
-                        // mod -
                         build_path(APPPATH, 'modules', $this->module, 'mobile', 'views'),
                         build_path(APPPATH, 'modules', $this->module, 'mobile'),
                         build_path(APPPATH, 'views', 'mobile'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'views'),
+                        build_path(FCPATH, 'content', 'themes', $this->theme, 'views'),
                         build_path(APPPATH, 'modules', $this->module, 'views'),
+                        build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'views'),
                         build_path(APPPATH, 'views'),
                         build_path(VIEWPATH),
                     );
@@ -1044,12 +1040,10 @@ class Theme {
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile', 'partials'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'partials'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'partials'),
-                        // mod +
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'partials'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'partials'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'partials'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'partials'),
-                        // mod -
                         build_path(APPPATH, 'modules', $this->module, 'mobile', 'partials'),
                         build_path(APPPATH, 'views', 'mobile', 'partials'),
                         build_path(APPPATH, 'modules', $this->module, 'views', 'partials'),
@@ -1098,10 +1092,8 @@ class Theme {
                 $paths = array(
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'layouts'),
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'layouts'),
-                    // mod +
                     build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'layouts'),
                     build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'layouts'),
-                    // mod -
                     build_path(APPPATH, 'modules', $this->module, 'views', 'layouts'),
                     build_path(APPPATH, 'views', 'layouts'),
                     build_path(VIEWPATH, 'layouts'),
@@ -1113,12 +1105,10 @@ class Theme {
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile', 'layouts'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module, 'layouts'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'layouts'),
-                        // mod +
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile', 'layouts'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile', 'layouts'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'layouts'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'layouts'),
-                        // mod -
                         build_path(APPPATH, 'modules', $this->module, 'mobile', 'views', 'layouts'),
                         build_path(APPPATH, 'views', 'mobile', 'layouts'),
                         build_path(APPPATH, 'modules', $this->module, 'views', 'layouts'),
@@ -1169,10 +1159,8 @@ class Theme {
                 $paths = array(
                     build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module),
                     build_path(FCPATH, 'content', 'themes', $this->theme),
-                    // mod +
                     build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
                     build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
-                    // mod -
                     build_path(APPPATH, 'modules', $this->module, 'views'),
                     build_path(APPPATH, 'views'),
                     build_path(VIEWPATH),
@@ -1184,12 +1172,10 @@ class Theme {
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'mobile'),
                         build_path(FCPATH, 'content', 'themes', $this->theme, 'modules', $this->module),
                         build_path(FCPATH, 'content', 'themes', $this->theme),
-                        // mod +
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme, 'mobile'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default', 'mobile'),
                         build_path(APPPATH, 'modules', $this->module, 'themes', $this->theme),
                         build_path(APPPATH, 'modules', $this->module, 'themes', 'default'),
-                        // mod -
                         build_path(APPPATH, 'modules', $this->module, 'mobile', 'views'),
                         build_path(APPPATH, 'modules', $this->module, 'views'),
                         build_path(APPPATH, 'modules', $this->module, 'views'),
