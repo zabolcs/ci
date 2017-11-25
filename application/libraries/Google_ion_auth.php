@@ -21,7 +21,7 @@ class Google_ion_auth extends Google_Client {
         if ($this->CI->config->item('redirect_uri', 'google_ion_auth') === '') {
             $this->my_url = site_url('');
         } else {
-            $this->my_url = $this->CI->config->item('redirect_uri', 'google_ion_auth');
+            $this->my_url = site_url('') . $this->CI->config->item('redirect_uri', 'google_ion_auth');
         }
     }
 
